@@ -96,6 +96,7 @@ public class Search
             }
             _closedList.add(currentNode);
             expandNode(currentNode);
+            
         }
         // TODO Dummy
         return new Path();
@@ -136,6 +137,16 @@ public class Search
                 selectedNeighbour.setFValue(f(selectedNeighbour, cost));
                 _openList.add(selectedNeighbour);
                 printEnvironment(selectedNeighbour);
+            }
+            // Sleep
+            try
+            {
+                Thread.sleep(_sleepTime);
+            }
+            catch (InterruptedException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     }

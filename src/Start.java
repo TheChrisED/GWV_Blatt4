@@ -22,9 +22,7 @@ public class Start
 
     public static final int LINE_COUNT = 10;
     public static final int LINE_LENGTH = 20;
-    public static final int BFS_SLEEP = 200;
-    public static final int DFS_SLEEP = 500;
-    public static final int VIEWING_TIME = 10000;
+    public static final int SLEEP = 200;
 
     private Search _search;
     private String _modus;
@@ -107,6 +105,7 @@ public class Start
 
         _search = new Search(environment, startPosX, startPosY, goalNode,
                 portals);
+        _search.setSleepTime(SLEEP);
     }
 
     /**
