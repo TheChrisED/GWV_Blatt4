@@ -7,7 +7,6 @@ public class NodeComparator implements Comparator<Node>
     @Override
     public int compare(Node o1, Node o2)
     {
-        // TODO Auto-generated method stub
         int o1F = o1.getFValue();
         int o2F = o2.getFValue();
         if (o1F == o2F)

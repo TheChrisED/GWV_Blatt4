@@ -5,9 +5,13 @@ import java.io.InputStreamReader;
 public class Main
 {
 
+    /**
+     * Starts up the program on three environments. 
+     * @param args
+     */
     public static void main(String[] args)
     {
-        // TODO Auto-generated method stub
+        // Loading the environments
         Start startBlatt3 = new Start("3");
         Start startBlatt4a = new Start("a");
         Start startBlatt4b = new Start("b");

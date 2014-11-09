@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -29,7 +28,14 @@ public class Search
     private List<Portal> _portals;
     private Portal _selectedPortal;
 
+    /**
+     * Contains all nodes that have been expanded where a lowest cost path to
+     * the node might not have been found yet
+     */
     private PriorityQueue<Node> _openList;
+    /**
+     * Contains all nodes where lowest cost path to the node has been found
+     */
     private Set<Node> _closedList;
     private int _currentPosX;
     private int _currentPosY;
@@ -48,6 +54,11 @@ public class Search
      * @param startPosY
      *            The X-Coordinate of the start point in the environment array.
      *            char[y][x]
+     * @param goalNode
+     *            A node which coordinates are the goal
+     * @param portals
+     *            If portals should be used in the search, they must be added as
+     *            a list, if portals should not be used the list must be empty
      */
     public Search(char[][] environment, int startPosX, int startPosY,
             Node goalNode, List<Portal> portals)
@@ -96,9 +107,8 @@ public class Search
             }
             _closedList.add(currentNode);
             expandNode(currentNode);
-            
+
         }
-        // TODO Dummy
         return new Path();
     }
 
@@ -107,13 +117,16 @@ public class Search
      * are added to the _openList, if there is not already a shorter path to
      * this node
      * 
-     * @param currentNode the node to expand
+     * @param currentNode
+     *            the node to expand
      */
     private void expandNode(Node currentNode)
     {
         List<Node> _neighbours = getNeighbours(currentNode);
         for (Node selectedNeighbour : _neighbours)
         {
+            // Checks if a lowest cost path to selectedNeighbour has been found
+            // yet
             if (_closedList.contains(selectedNeighbour))
             {
                 continue;
@@ -123,13 +136,16 @@ public class Search
             int cost = cost(selectedNeighbour);
             selectedNeighbour.setCost(cost);
 
+            // Checks if a lower cost path to selectedNeighbour has been found
+            // yet
             for (Node node : _openList)
             {
                 if (selectedNeighbour.equals(node)
                         && selectedNeighbour.getCost() >= node.getCost())
                 {
+                    // A shorter path has already been found, so
+                    // selectedNeighbour should not be added to the _openList
                     selPathIsbestPath = false;
-
                 }
             }
             if (selPathIsbestPath)
@@ -145,7 +161,6 @@ public class Search
             }
             catch (InterruptedException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -155,7 +170,8 @@ public class Search
      * Returns all reachable neighbours of a node. If a neighbour is a portal,
      * the other entrance of the portal is returned in the list.
      * 
-     * @param
+     * @param node
+     *            the node to get the neighbours for
      * @return All neighbours are returned as a list
      */
     private List<Node> getNeighbours(Node node)
@@ -245,6 +261,7 @@ public class Search
      */
     private int f(Node node)
     {
+        // f(n) = h(n) + cost(n)
         return h(node) + cost(node);
     }
 
@@ -259,6 +276,7 @@ public class Search
      */
     private int f(Node node, int costOfPathToNode)
     {
+        // f(n) = h(n) + cost(n)
         return h(node) + costOfPathToNode;
     }
 
@@ -271,6 +289,9 @@ public class Search
      */
     private int cost(Node node)
     {
+        // The cost of a node is the cost of a path to the node, it is computed
+        // by simply counting how many nodes are on the path. The path is
+        // reconstructed by calling each node´s predecessor
         int cost = 0;
         Node selectedNode = node.getPredecessor();
         while (selectedNode != null)
@@ -290,18 +311,24 @@ public class Search
      */
     private int h(Node node)
     {
+        // h is the distance from node to _startNode, or the shortest distance
+        // to _startNode while using a portal
         int distanceNoPortal = distance(node, _startNode);
         int distanceWithPortal = Integer.MAX_VALUE;
+        // Sets distanceWithPortal to the smallest distance to the start node
+        // while using a portal
         for (Portal portal : _portals)
         {
             Node entrance1 = portal.getEntrance1AsNode();
             Node entrance2 = portal.getEntrance2AsNode();
+            // The distance while entering entrance1 and exiting entrance2
             int currentDistanceWithPortal = distance(node, entrance1)
                     + distance(entrance2, _startNode);
             if (currentDistanceWithPortal < distanceWithPortal)
             {
                 distanceWithPortal = currentDistanceWithPortal;
             }
+            // The distance while entering entrance2 and exiting entrance1
             currentDistanceWithPortal = distance(node, entrance2)
                     + distance(entrance1, _startNode);
             if (currentDistanceWithPortal < distanceWithPortal)
@@ -310,6 +337,8 @@ public class Search
             }
         }
 
+        // The smallest possible distance with or without the use portals is
+        // returned
         return Math.min(distanceNoPortal, distanceWithPortal);
     }
 
@@ -369,6 +398,7 @@ public class Search
      * diretion
      *
      * @param direction
+     *            The direction to move to
      */
     private void move(char direction)
     {
@@ -460,7 +490,8 @@ public class Search
 
     // ----Clear-Methods: ----
     // These methods check wether positions next to the current
-    // position are clear and have not been visited during search yet.
+    // position are clear. (As long as the position is not part of a wall true
+    // is returned)
     private boolean topIsClear()
     {
         return _environment[_currentPosY - 1][_currentPosX] != 'x';
@@ -486,7 +517,6 @@ public class Search
      */
     private void reset()
     {
-        // TODO Reset A* ergänzen
         _environment = Start.copy2DCharArray(_inputEnvironment);
         _currentPosX = _startPosX;
         _currentPosY = _startPosY;

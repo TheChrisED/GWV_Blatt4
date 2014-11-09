@@ -58,7 +58,6 @@ public class Path implements Iterable{
     @Override
     public Iterator<Node> iterator()
     {
-        // TODO Auto-generated method stub
         return nodelist.iterator();
     }
 }

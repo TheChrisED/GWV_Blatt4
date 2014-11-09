@@ -140,7 +140,6 @@ public class Portal
     @Override
     public String toString()
     {
-        // TODO Auto-generated method stub
         return "([" + _entrance1.getX() + ", " + _entrance1.getY() + "] ["
                 + _entrance2.getX() + ", " + _entrance2.getY() + "])";
     }
