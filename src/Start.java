@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author 3dibbern
  */
-public class Start implements Observer
+public class Start
 {
 
     public static final int LINE_COUNT = 10;
@@ -25,11 +25,15 @@ public class Start implements Observer
     public static final int BFS_SLEEP = 200;
     public static final int DFS_SLEEP = 500;
     public static final int VIEWING_TIME = 10000;
-    public UI _ui = null;
 
     private Search _search;
     private String _modus;
 
+    /**
+     * Copies a 2D char array
+     * @param original the array to be copied
+     * @return copy of original
+     */
     public static char[][] copy2DCharArray(char[][] original)
     {
         int sizeY = original.length;
@@ -42,11 +46,13 @@ public class Start implements Observer
         return copy;
     }
 
-    public static void print2DCharArray(char[][] array)
-    {
-
-    }
-
+    /**
+     * Creates a new Start Object with the specified mode
+     * 
+     * @param modus
+     *            Tells the object which environment to load. Valid arguments
+     *            are: "3"(Blatt3), "a"(Blatt4a), "b"(Blatt4b)
+     */
     public Start(String modus)
     {
         initSearch(modus);
@@ -99,28 +105,17 @@ public class Start implements Observer
 
         Node goalNode = new Node(goalPosX, goalPosY);
 
-        // _ui = new UI(environment);
-        // _ui.addObserver(this);
-
-        _search = new Search(environment, startPosX, startPosY, goalNode, _ui,
+        _search = new Search(environment, startPosX, startPosY, goalNode,
                 portals);
     }
 
+    /**
+     * Starts the AStar Search Algorithm on the environment
+     */
     public void startAStarSearch()
     {
         Path starPath = _search.aStarSearch();
         System.out.println(starPath.toString());
-    }
-
-    @Override
-    public void update(Observable o, Object arg)
-    {
-        String action = (String) arg;
-
-        switch (action)
-        {
-        // TODO No Button interaction
-        }
     }
 
 }

@@ -29,7 +29,6 @@ public class Search
     private final int _startPosY;
     private final Node GOAL_NODE;
     private final Node _startNode;
-    private final UI _ui;
     private long _sleepTime;
     private List<Portal> _portals;
     private Portal _selectedPortal;
@@ -55,7 +54,7 @@ public class Search
      *            char[y][x]
      */
     public Search(char[][] environment, int startPosX, int startPosY,
-            Node goalNode, UI output, List<Portal> portals)
+            Node goalNode, List<Portal> portals)
     {
         _environment = Start.copy2DCharArray(environment);
         _inputEnvironment = Start.copy2DCharArray(environment);
@@ -68,7 +67,6 @@ public class Search
         GOAL_NODE.setFValue(0);
         _startNode = new Node(startPosX, startPosY);
         _startNode.setFValue(0);
-        _ui = output;
         _sleepTime = 0;
         _portals = portals;
         _selectedPortal = null;
@@ -78,7 +76,12 @@ public class Search
         _loopCounter = 0;
     }
 
-    // TODO Portals are not working properly
+    /**
+     * Starts an AStar Search on the environment
+     * 
+     * @return The shortest path to the goal, if a path is found. Else the empty
+     *         Path is returned
+     */
     public Path aStarSearch()
     {
         reset();
@@ -102,6 +105,13 @@ public class Search
         return new Path();
     }
 
+    /**
+     * Expands the current node. All reachable neighbours of the current node
+     * are added to the _openList, if there is not already a shorter path to
+     * this node
+     * 
+     * @param currentNode the node to expand
+     */
     private void expandNode(Node currentNode)
     {
         List<Node> _neighbours = getNeighbours(currentNode);
@@ -175,7 +185,13 @@ public class Search
         return nodes;
     }
 
-    // TODO setFValue
+    /**
+     * Adds the node for the current position the specified nodes list, if it is
+     * not a portal. If it is the other entrance of the portal is added
+     * 
+     * @param nodes
+     *            the list to add the node to
+     */
     private void addNeighbour(List<Node> nodes)
     {
         Node currentNode = new Node(_currentPosX, _currentPosY);
@@ -190,6 +206,15 @@ public class Search
         }
     }
 
+    /**
+     * Checks if the specified node is the entrance of a portal in _portals If
+     * node is a portal entrance, _selected portal is set to the portal
+     * containing the node.
+     * 
+     * @param node
+     *            The node to check
+     * @return true if node is an entrance of a portal, false if not
+     */
     private boolean isPortalEntrance(Node node)
     {
         for (Portal portal : _portals)
@@ -204,16 +229,39 @@ public class Search
         return false;
     }
 
+    /**
+     * Return the f-Value of the specified node
+     * 
+     * @param node
+     *            The node to calculate the f-Value for
+     * @return f-Value
+     */
     private int f(Node node)
     {
         return h(node) + cost(node);
     }
 
+    /**
+     * Return the f-Value of the specified node
+     * 
+     * @param node
+     *            The node to calculate the f-Value for
+     * @param costOfPathToNode
+     *            the cost of a path to the node
+     * @return f-Value
+     */
     private int f(Node node, int costOfPathToNode)
     {
         return h(node) + costOfPathToNode;
     }
 
+    /**
+     * The cost of a path to the specified node
+     * 
+     * @param node
+     *            The node to calculate the cost for
+     * @return cost of a path to the node
+     */
     private int cost(Node node)
     {
         int cost = 0;
@@ -226,6 +274,13 @@ public class Search
         return cost;
     }
 
+    /**
+     * The heuristic value for a node
+     * 
+     * @param node
+     *            the node to compute the heuristic value for
+     * @return heuristic value
+     */
     private int h(Node node)
     {
         int distanceNoPortal = distance(node, _startNode);
@@ -251,6 +306,15 @@ public class Search
         return Math.min(distanceNoPortal, distanceWithPortal);
     }
 
+    /**
+     * The shortest possible distance between two nodes.
+     * 
+     * @param a
+     *            Node a
+     * @param b
+     *            Node b
+     * @return distance between a and b
+     */
     private int distance(Node a, Node b)
     {
         int smallestDistance = Math.abs(a.getX() - b.getX())
@@ -331,19 +395,24 @@ public class Search
         _currentPosY = position.getY();
     }
 
+    /**
+     * Prints the environment and marks the specified node as visited in the
+     * environment
+     * 
+     * @param addedNode
+     *            the node to mark in the environment
+     */
     public void printEnvironment(Node addedNode)
     {
-        // _ui.printEnvironment(_environment);
-        // _ui.addText("Schleifendurchgänge: " + String.valueOf(loopCounter));
-        // if (!isPortalEntrance(addedNode))
-        // {
         _environment[addedNode.getY()][addedNode.getX()] = VISITED;
-        // }
         print();
         System.out.println(_loopCounter);
         System.out.println(addedNode.toPreciseString());
     }
 
+    /**
+     * Prints the current environment
+     */
     private void print()
     {
         for (int y = 0; y < 10; ++y)
@@ -358,6 +427,13 @@ public class Search
         }
     }
 
+    /**
+     * Resets the current environment and marks the nodes on the path as
+     * visited. Goals, start points and portals will not be marked
+     * 
+     * @param path
+     *            the path to mark
+     */
     private void printPathInEnvironment(Path path)
     {
         reset();
@@ -398,6 +474,9 @@ public class Search
         return _environment[_currentPosY][_currentPosX + 1] != 'x';
     }
 
+    /**
+     * Resets all relevant values, so a new search process can be started
+     */
     private void reset()
     {
         // TODO Reset A* ergänzen
