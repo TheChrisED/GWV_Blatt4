@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -58,36 +59,35 @@ public class Start
 
     private void initSearch(String modus)
     {
-        URL urlreader = null;
+        InputStream urlreader = null;
         switch (modus)
         {
         case "a":
-            urlreader = ClassLoader.getSystemClassLoader().getResource(
-                    "resources/blatt4_environment_a.txt");
+            urlreader = getClass().getResourceAsStream("resources/blatt4_environment_a.txt");
+//            urlreader = ClassLoader.getSystemClassLoader().getResource(
+//                    "resources/blatt4_environment_a.txt");
             break;
         case "b":
-            urlreader = ClassLoader.getSystemClassLoader().getResource(
-                    "resources/blatt4_environment_b2.txt");
+            urlreader = getClass().getResourceAsStream("resources/blatt4_environment_b2.txt");
+//            urlreader = ClassLoader.getSystemClassLoader().getResource(
+//                    "resources/blatt4_environment_b2.txt");
             break;
         case "3":
-            urlreader = ClassLoader.getSystemClassLoader().getResource(
-                    "resources/blatt3_environment.txt");
+            urlreader = getClass().getResourceAsStream("resources/blatt3_environment.txt");
+//            urlreader = ClassLoader.getSystemClassLoader().getResource(
+//                    "resources/blatt3_environment.txt");
             break;
         }
 
         EnvironmentReader reader = null;
         try
         {
-            reader = new EnvironmentReader(urlreader.toURI(), LINE_COUNT,
+            reader = new EnvironmentReader(urlreader, LINE_COUNT,
                     LINE_LENGTH);
         }
         catch (IOException ex)
         {
             Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (URISyntaxException ex)
-        {
-            ex.printStackTrace();
         }
         char[][] environment = reader.getEnvironment();
 

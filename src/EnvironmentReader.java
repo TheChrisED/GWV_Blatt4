@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.Set;
 
@@ -20,7 +22,7 @@ public class EnvironmentReader
 {
 
     private String _location;
-    private URI _uriLocation;
+    private InputStream _inputStream;
     private final int _lineCount;
     private final int _lineLength;
     private final char START_CHAR = 's';
@@ -44,9 +46,9 @@ public class EnvironmentReader
      * @throws IOException If the path is not valid or not a text file, an
      * IOException is thrown
      */
-    public EnvironmentReader(URI location, int lineCount, int lineLength) throws IOException
+    public EnvironmentReader(InputStream location, int lineCount, int lineLength) throws IOException
     {
-        _uriLocation = location;
+        _inputStream = location;
         _lineCount = lineCount;
         _lineLength = lineLength;
         _portals = new LinkedList<Portal>();
@@ -56,7 +58,7 @@ public class EnvironmentReader
     
     private void readEnvironment() throws IOException
     {
-        BufferedReader reader = new BufferedReader(new FileReader(new File(_uriLocation)));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(_inputStream));
 
         char[][] environment = new char[_lineCount][_lineLength];
 

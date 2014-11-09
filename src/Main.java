@@ -12,6 +12,7 @@ public class Main
         Start startBlatt4a = new Start("a");
         Start startBlatt4b = new Start("b");
 
+        System.out.println("Zum beenden \"q\" eingeben und Enter drücken \n");
         while (true)
         {
             String ausgabe = "Auf welcher Umgebung soll die Suche gestartet werden? \n"
@@ -36,6 +37,12 @@ public class Main
                 break;
             case "b":
                 startBlatt4b.startAStarSearch();
+                break;
+            case "q":
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Unbekannte Eingabe!");
                 break;
             }
             System.out.println("Zum Fortfahren Enter drücken!");
