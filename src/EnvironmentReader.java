@@ -163,7 +163,10 @@ public class EnvironmentReader
     {
         return GOAL_CHAR;
     }
-    
+    /**
+     * Returns a list of the portals found in the environment
+     * @return list of the portals
+     */
     public List<Portal> getPortals()
     {
         return _portals;

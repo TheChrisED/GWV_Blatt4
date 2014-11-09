@@ -1,5 +1,4 @@
-import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -8,9 +7,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Search
 {
@@ -219,8 +215,8 @@ public class Search
     {
         for (Portal portal : _portals)
         {
-            if (node.equals(portal.get_entrance1())
-                    || node.equals(portal.get_entrance2()))
+            if (node.equals(portal.getEntrance1AsNode())
+                    || node.equals(portal.getEntrance2AsNode()))
             {
                 _selectedPortal = portal;
                 return true;
@@ -287,8 +283,8 @@ public class Search
         int distanceWithPortal = Integer.MAX_VALUE;
         for (Portal portal : _portals)
         {
-            Node entrance1 = portal.get_entrance1();
-            Node entrance2 = portal.get_entrance2();
+            Node entrance1 = portal.getEntrance1AsNode();
+            Node entrance2 = portal.getEntrance2AsNode();
             int currentDistanceWithPortal = distance(node, entrance1)
                     + distance(entrance2, _startNode);
             if (currentDistanceWithPortal < distanceWithPortal)
